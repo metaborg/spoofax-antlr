@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1448452489716
+Build-Jdk: 1.8.0_05
+Built-By: martijn
+Bundle-License: https://www.gnu.org/licenses/lgpl-2.1.html
+Bundle-ManifestVersion: 2
+Bundle-Name: org.metaborg.meta.lib.antlr
+Bundle-SymbolicName: org.metaborg.meta.lib.antlr
+Bundle-Version: 1.5.0.qualifier
+Created-By: Apache Maven Bundle Plugin
+Eclipse-BuddyPolicy: registered
+Export-Package: org.metaborg.meta.lib.antlr;version="1.5.0"
+Import-Package: org.metaborg.spoofax.meta.core;version="[1.5,2)",org.apa
+ che.tools.ant
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.7))"
+Tool: Bnd-2.4.1.201501161923
