@@ -1,7 +1,19 @@
 package org.metaborg.meta.lib.antlr;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import javax.tools.DiagnosticCollector;
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
+import javax.tools.StandardJavaFileManager;
+import javax.tools.ToolProvider;
+
+import java.net.URLClassLoader;
 
 import org.antlr.v4.Tool;
 import org.antlr.v4.runtime.misc.Utils;
@@ -29,13 +41,29 @@ public class ANTLRBuilder implements IBuildStep {
         	// TODO: handle error!
         }
         
-        //JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        // Get the java files
+        File dir = new File("/Users/martijn/Documents/runtime-Spoofax/Test/target/Test/syntax/");
+        File[] files = dir.listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                return name.endsWith(".java");
+            }
+        });
         
-        //int compilationResult = compiler.run(null, null, null, "Test/target/Test/syntax/ExprParser.java");
-
-        //if (compilationResult > 0) {
-        	// TODO: Handle error!
-        //}
+        // Compile
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
+        StandardJavaFileManager fileManager = compiler.getStandardFileManager(diagnostics, null, null);
+        Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjects(files);
+        String classpath = "/Users/martijn/.m2/repository/org/antlr/antlr4/4.5.1/antlr4-4.5.1.jar"; // TODO: Get antlr from somewhere. Only think on our classpath is: /Users/martijn/Eclipse/spoofax-dev/plugins/org.eclipse.equinox.launcher_1.3.0.v20140415-2008.jar
+        Iterable<String> options = Arrays.asList("-classpath", classpath);
+        JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, diagnostics, options, null, compilationUnits);
+        boolean success = task.call();
+        
+        if (!success) {
+            System.out.println(Arrays.toString(diagnostics.getDiagnostics().toArray()));
+        } else {
+            System.out.println("Compiled successfully");
+        }
 	}
 	
 	/**
