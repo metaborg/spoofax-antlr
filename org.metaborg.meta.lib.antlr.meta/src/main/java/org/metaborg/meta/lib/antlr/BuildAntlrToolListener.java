@@ -4,10 +4,10 @@ import org.antlr.v4.Tool;
 import org.antlr.v4.tool.ANTLRMessage;
 import org.antlr.v4.tool.ANTLRToolListener;
 
-public class BuildANTLRToolListener implements ANTLRToolListener {
+public class BuildAntlrToolListener implements ANTLRToolListener {
 	protected Tool tool;
 
-    public BuildANTLRToolListener(Tool tool) {
+    public BuildAntlrToolListener(Tool tool) {
         this.tool = tool;
     }
     

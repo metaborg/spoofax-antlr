@@ -1,0 +1,27 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1448625445443
+Build-Jdk: 1.8.0_05
+Built-By: martijn
+Bundle-Description: Maven parent POM for Java projects
+Bundle-License: https://www.gnu.org/licenses/lgpl-2.1.html
+Bundle-ManifestVersion: 2
+Bundle-Name: org.metaborg.meta.lib.antlr
+Bundle-SymbolicName: org.metaborg.meta.lib.antlr
+Bundle-Version: 1.5.0.qualifier
+Created-By: Apache Maven Bundle Plugin
+Eclipse-BuddyPolicy: registered
+Export-Package: org.metaborg.meta.lib.antlr;version="1.5.0"
+Import-Package: org.spoofax.interpreter.terms;version="[1.5,2)",org.meta
+ borg.core.language;version="[1.5,2)",org.metaborg.core.syntax;version="
+ [1.5,2)",org.metaborg.spoofax.meta.core;version="[1.5,2)",com.google.in
+ ject;provider=metaborg;mandatory:=provider;version="[1.3,2)",com.google
+ .inject.binder;provider=metaborg;mandatory:=provider;version="[1.3,2)",
+ com.google.inject.multibindings;provider=metaborg;mandatory:=provider;v
+ ersion="[1.3,2)",org.antlr.v4;provider=metaborg;mandatory:=provider,org
+ .antlr.v4.runtime.misc;provider=metaborg;mandatory:=provider,org.antlr.
+ v4.tool;provider=metaborg;mandatory:=provider,org.apache.commons.vfs2;p
+ rovider=metaborg;mandatory:=provider;version="[2.0,3)",org.slf4j;provid
+ er=metaborg;mandatory:=provider;version="[1.7,2)",org.stringtemplate.v4
+ ;provider=metaborg;mandatory:=provider,org.apache.tools.ant
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.7))"
+Tool: Bnd-2.4.1.201501161923
