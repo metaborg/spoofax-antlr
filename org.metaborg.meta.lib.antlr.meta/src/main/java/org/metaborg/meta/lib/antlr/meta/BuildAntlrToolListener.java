@@ -1,4 +1,4 @@
-package org.metaborg.meta.lib.antlr;
+package org.metaborg.meta.lib.antlr.meta;
 
 import org.antlr.v4.Tool;
 import org.antlr.v4.tool.ANTLRMessage;
