@@ -1,0 +1,8 @@
+Bundle-ManifestVersion: 2
+Bundle-Name: org.metaborg.antlr.eclipse
+Bundle-SymbolicName: org.metaborg.antlr.eclipse;singleton:=true
+Bundle-Version: 1.5.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: org.metaborg.antlr,
+ org.metaborg.antlr.meta,
+ org.metaborg.antlr.eclipse.externaldeps

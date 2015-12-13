@@ -1,0 +1,81 @@
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+>
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>org.metaborg.antlr.eclipse.externaldeps</artifactId>
+  <packaging>bundle</packaging>
+
+  <parent>
+    <groupId>org.metaborg</groupId>
+    <artifactId>parent</artifactId>
+    <version>1.5.0-SNAPSHOT</version>
+    <relativePath />
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.antlr</groupId>
+      <artifactId>antlr4</artifactId>
+      <version>4.5.1-1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.antlr</groupId>
+      <artifactId>antlr4-runtime</artifactId>
+      <version>4.5.1-1</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <sourceDirectory>src</sourceDirectory>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+      </plugin>
+      <!-- Generate MANIFEST.MF from project, to make project available to Eclipse plugins. -->
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <unpackBundle>true</unpackBundle>
+          <instructions>
+            <!-- Fix names not to include the groupId. -->
+            <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+            <Bundle-Name>${project.artifactId}</Bundle-Name>
+            <!-- Replace SNAPSHOT in the manifest version with given qualifier. -->
+            <Bundle-Version>$(replace;${project.version};-SNAPSHOT;.${forceContextQualifier})</Bundle-Version>
+            <!-- Embed dependencies into plugin bundle, so they are exportable. -->
+            <Embed-Dependency>
+              antlr4,
+              antlr4-runtime
+            </Embed-Dependency>
+            <!-- Export dependency packages -->
+            <Export-Package>
+              org.antlr*;provider=metaborg;mandatory:=provider,
+              org.antlr;provider=metaborg;mandatory:=provider,
+              org.stringtemplate*;provider=metaborg;mandatory:=provider,
+              org.stringtemplate;provider=metaborg;mandatory:=provider
+            </Export-Package>
+            <!-- Don't declare dependency on JDK, internal, or non-existent packages. -->
+            <Import-Package/>
+            <!-- Don't generate uses declarations in exported packages. -->
+            <_nouses>true</_nouses>
+          </instructions>
+        </configuration>
+      </plugin>
+      <!-- Add the generated MANIFEST.MF is used in the resulting JAR file. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifestFile>${manifest-location}/MANIFEST.MF</manifestFile>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
