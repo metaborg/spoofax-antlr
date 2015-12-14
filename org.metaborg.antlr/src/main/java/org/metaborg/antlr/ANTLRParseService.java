@@ -1,5 +1,6 @@
 package org.metaborg.antlr;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -8,12 +9,13 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.TokenStream;
+import org.antlr.v4.runtime.atn.ATNSimulator;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.vfs2.FileObject;
@@ -31,11 +33,14 @@ import org.metaborg.spoofax.core.terms.ITermFactoryService;
 import org.metaborg.util.iterators.Iterables2;
 import org.spoofax.interpreter.terms.IStrategoTerm;
 import org.spoofax.interpreter.terms.ITermFactory;
+
+import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
 public class ANTLRParseService implements IParseService<IStrategoTerm> {
     private IResourceService resourceService;
     private ITermFactoryService termFactoryService;
+    ATNSimulator dummy;
 
     @Inject public ANTLRParseService(IResourceService resourceService, ITermFactoryService termFactoryService) {
         this.resourceService = resourceService;
@@ -44,10 +49,17 @@ public class ANTLRParseService implements IParseService<IStrategoTerm> {
 
     @Override public ParseResult<IStrategoTerm> parse(String text, FileObject resource, ILanguageImpl language,
         IParserConfiguration parserConfig) throws ParseException {
-        FileObject parserJar = resourceService.resolve(SpoofaxConstants.DIR_INCLUDE + "/antlr.jar");
-        ClassLoader parent = getClass().getClassLoader();
+        final FileObject location = Iterables.get(language.locations(), 0);
+        final FileObject parseJar;
+        try {
+            parseJar = location.resolveFile(SpoofaxConstants.DIR_INCLUDE).resolveFile("antlr.jar");
+        } catch(FileSystemException e) {
+            throw new ParseException(resource, language, "Cannot load parse JAR", e);
+        }
+        final File localParseJar = resourceService.localFile(parseJar);
 
-        try(URLClassLoader classLoader = new URLClassLoader(new URL[] { parserJar.getURL() }, parent)) {
+        final ClassLoader parent = getClass().getClassLoader();
+        try(final URLClassLoader classLoader = new URLClassLoader(new URL[] { localParseJar.toURI().toURL() }, parent)) {
             try {
                 String name = language.id().id;
                 Class<?> parserClass = Class.forName("antlr." + name + "Parser", true, classLoader);
